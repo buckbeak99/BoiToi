@@ -1,0 +1,138 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/header.ejs') %>
+<%- include('../includes/navigation.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      .forms-control {
+        margin: 1rem 0;
+      }
+
+      .forms-control label,
+      .forms-control input,
+      .forms-control textarea {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.25rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        text-decoration: none;
+        font: inherit;
+        border: 1px solid #00695c;
+        color: #00695c;
+        background: white;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .product-form {
+        width: 70rem;
+        max-width: 90%;
+        margin: auto;
+        display: block;
+      }
+      .products-form {
+        width: 90rem;
+        max-width: 100%;
+        margin: auto;
+        display: block;
+      }
+      .forms-control input,
+      .forms-control textarea {
+        border: 1px solid #a1a1a1;
+        font: inherit;
+        border-radius: 2px;
+      }
+
+      .forms-control input:focus,
+      .forms-control textarea:focus {
+        outline-color: #00695c;
+      }
+
+      .forms-control input.invalid {
+        border-color: red;
+      }
+      .user-message {
+        margin: auto;
+        width: 90%;
+        border: 1px solid #4771fa;
+        padding: 0.5rem;
+        border-radius: 3px;
+        background: #b9c9ff;
+        text-align: center;
+        color: white;
+      }
+
+      .user-message--error {
+        border-color: red;
+        background: rgb(255, 176, 176);
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3">
+
+              </div>
+              <div class="col-md-6">
+                <main>
+                    <% if (errorMessage) { %>
+                    <div class="user-message user-message--error" style="color: white">
+                      <%= errorMessage %>
+                    </div>
+                    <% } %>
+                  </main>
+                  <form class="product-form" action="/admin/add-discount" method="post">
+                    <div class="forms-control">
+                      <label for="name">Product Name</label>                      
+                      <input type="text" name="name" value="<%= product.name %>"readonly />
+                      <hr />
+                      <label for="oldPrice">Product Old Price</label>                      
+                      <input type="text" name="oldPrice" id="oldPrice" value="<%= product.price %>"readonly />
+                      <hr />
+
+                      <label for="discount">Discount Amount (In %)</label>
+                      <input type="number" name="discount" id="discount" onchange="disValue()" />
+                      <hr style="visibility: hidden;" />
+                      <label for="newPrice">Product New Price</label>                      
+                      <input type="text" name="newPrice" id="newPrice" readonly/>
+                      <hr  />
+                      <label for="newPrice">Discount Expiration Day After</label>                      
+                      <input type="number" name="date"/>
+                      <hr style="visibility: hidden;" />
+                      <input type="hidden" value="<%= product._id %>" name="productId" />
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <button class="btn" type="submit">Add Discount</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="col-md-3">
+                  
+            </div>
+          </div>
+
+      </div>
+    
+  </body>
+</html>
+
+<%- include('../includes/end.ejs') %>
+<script>
+    function disValue(){
+    const discountValue = document.getElementById("discount").value;
+    console.log(discountValue);
+    let StringoldPrice  = document.getElementById("oldPrice").value ;
+    let oldPrice = parseInt(StringoldPrice);
+    console.log(oldPrice); 
+    let updatedPrice = oldPrice - (discountValue * oldPrice) / 100;
+    let IntupdatedPrice = Math.floor(updatedPrice);
+    console.log(IntupdatedPrice);
+    document.getElementById("newPrice").value = IntupdatedPrice;
+    }
+</script>

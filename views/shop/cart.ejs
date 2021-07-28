@@ -1,0 +1,95 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/header.ejs') %>
+<%- include('../includes/navigation.ejs') %>
+
+<style>
+  .cart__item-list {
+    
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin: auto;
+    width: 60rem;
+    max-width: 90%;
+  }
+
+  .cart__item {
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    margin-bottom: 1rem;
+  }
+
+  .cart__item h1,
+  .cart__item h2 {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .btn2 {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font: inherit;
+    border: 1px solid #00695c;
+    color: #00695c;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .btn1 {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font: inherit;
+    border: 1px solid #690009;
+    color: #fff;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .btn1:hover{
+      color: white;
+      background: red;
+  }
+</style>
+
+<main>
+  <% if (products.length > 0) { %>
+  <ul class="cart__item-list" style="font-weight: bold;">
+    <% products.forEach(p => { %>
+    <li class="cart__item">
+      <h1><%= p.productId.name %></h1>
+      <h2>Quantity: <%= p.quantity %></h2>
+      <form action="/cart-delete-item" method="POST">
+        <input type="hidden" value="<%= p.productId._id %>" name="productId" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button class="btn1" type="submit">Delete</button>
+      </form>
+    </li>
+    <% }) %>
+  </ul>
+  <hr />
+  <div class="centered" style="text-align: center;">
+    <!--<form action="/create-order" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn">Order Now!</button>
+            </form>-->
+    <button type="button" class="btn2">
+      <a class="" href="/checkout">Order Now!</a>
+    </button>
+  </div>
+
+  <% } else { %>
+    <div style="text-align: center;"">
+      <h1>No Products in Cart!</h1>
+
+    </div>
+  <% } %>
+</main>
+
+<%- include('../includes/end.ejs') %>

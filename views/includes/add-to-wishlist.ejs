@@ -1,0 +1,14 @@
+<style>
+    .slider:hover:after {
+      content: "Add to Wishlist";
+    }
+  </style>
+  
+  <form action="/add-to-whishlist" method="post" style="display: inline-block;">
+    <input type="hidden" name="_csrf" value="<%= csrfToken  %>" />
+    <input type="hidden" name="productId" value="<%= product._id %>" />
+    <button class="add-to-wishlist" type="submit" style="border: none;">
+      <i style="font-size: 14px;" class="fa fa-heart slider"></i>
+    </button>
+  </form>
+  

@@ -1,0 +1,139 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/header.ejs') %>
+<%- include('../includes/navigation.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+        table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+      .image-preview {
+        width: 250px;
+        min-height: 250px;
+        border: 2px solid #dddddd;
+        margin-top: 15px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #cccccc;
+      }
+
+      .image-preview__image {
+        display: none;
+        width: 100%;
+      }
+
+      .forms-control {
+        margin: 1rem 0;
+      }
+
+      .forms-control label,
+      .forms-control input,
+      .forms-control textarea {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.25rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        text-decoration: none;
+        font: inherit;
+        border: 1px solid #00695c;
+        color: #00695c;
+        background: white;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .product-form {
+        width: 100rem;
+        /* max-width: 100%; */
+        margin: auto;
+        display: block;
+      }
+      .products-form {
+        width: 90rem;
+        max-width: 100%;
+        margin: auto;
+        display: block;
+      }
+      .forms-control input,
+      .forms-control textarea {
+        border: 1px solid #a1a1a1;
+        font: inherit;
+        border-radius: 2px;
+      }
+
+      .forms-control input:focus,
+      .forms-control textarea:focus {
+        outline-color: #00695c;
+      }
+
+      .forms-control input.invalid {
+        border-color: red;
+      }
+      .user-message {
+        margin: auto;
+        width: 90%;
+        border: 1px solid #4771fa;
+        padding: 0.5rem;
+        border-radius: 3px;
+        background: #b9c9ff;
+        text-align: center;
+        color: white;
+      }
+
+      .user-message--error {
+        border-color: red;
+        background: rgb(255, 176, 176);
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+       
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Ordered Amount</th>
+                <th>Order Status</th>
+                <th>Payment Status</th>
+                <th>Invoice</th>
+                
+              </tr>
+              <tr>
+                  <td><%= order._id %></td>
+                  <td><%= order.products.length %></td>
+                  <td><%= order.orderStatus %></td>
+                  <td><%= order.payment_status %></td>
+                  <td><a href="/orders/<%= order._id %>">Invoice</a></td>
+              </tr>
+        </table>
+
+        
+      </div>
+    </div>
+    
+  </body>
+</html>
+
+<%- include('../includes/end.ejs') %>

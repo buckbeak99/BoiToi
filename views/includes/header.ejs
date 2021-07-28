@@ -1,0 +1,260 @@
+<!-- HEADER -->
+<style>
+  .cart-btns a.disabled {
+    pointer-events: none;
+    cursor: default;
+    background-color: #b2beb5;
+  }
+
+  .cart-btns a:hover {
+    color: darkcyan;
+  }
+</style>
+<header>
+  <!-- TOP HEADER -->
+  <div id="top-header">
+    <div class="container">
+      <ul class="header-links pull-left">
+        <li>
+          <a href="#"><i class="fa fa-phone"></i> +88013******</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-envelope-o"></i> admin@admin.com</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-map-marker"></i>Dhaka, Banani</a>
+        </li>
+      </ul>
+      <ul class="header-links pull-right">
+        <% if(!isAuthenticated) { %>
+        <li>
+          <a href="/signup"><i class="fa fa-user-o"></i> Sign Up</a>
+        </li>
+        <li>
+          <a href="/login"><i class="fa fa-user-o"></i> Sign In</a>
+        </li>
+        <% } else { %>
+          <%if(user.userType === "USER") { %>
+        <li>
+          <a href="/dashboard"><i class="fa fa-user-o"></i>Dashboard</a>
+        </li>
+        <% } else if(user.userType === "PUBLISHER") { %>
+          <li>
+            <a href="/publisher/dashboard"><i class="fa fa-user-o"></i>Dashboard</a>
+          </li>
+        <% } else if(user.userType === "ADMIN") { %>
+          <li>
+            <a href="/admin/dashboard"><i class="fa fa-user-o"></i>Dashboard</a>
+          </li>
+        <%  }  %>  
+        <li>
+          <a href="/logout"><i class="fa fa-user-o"></i>Logout</a>
+        </li>
+
+        <% } %>
+      </ul>
+    </div>
+  </div>
+  <!-- /TOP HEADER -->
+
+  <!-- MAIN HEADER -->
+  <div id="header">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- LOGO -->
+        <div class="col-md-3">
+          <div class="header-logo">
+            <a href="/" class="logo">
+              <img src="/img/logo1.png" alt="Boi-Toi" />
+            </a>
+          </div>
+        </div>
+        <!-- /LOGO -->
+
+        <!-- SEARCH BAR -->
+        <div class="col-md-6">
+          <div class="header-search">
+            <form action="/search-products" method="GET">
+              <select class="input-select" name="category">
+                <option value = "0">All Categories</option>
+                <% categories.forEach((item) => { %>
+                  <option value="<%= item.name %>"> <%= item.name.toUpperCase() %></option>
+               <% }) %>
+              </select>
+              <input class="input" placeholder="Search Anything!!!" name="q" />
+              <button class="search-btn">Search</button>
+            </form>
+          </div>
+        </div>
+        <!-- /SEARCH BAR -->
+
+        <!-- ACCOUNT -->
+        <div class="col-md-3 clearfix">
+          <div class="header-ctn">
+            <!-- Wishlist -->
+            <div class="dropdown">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                aria-expanded="true"
+              >
+                <i class="fa fa-heart-o"></i>
+                <span>Your Wishlist</span>
+                <% if(isAuthenticated) { %>
+                <div class="qty"><%= user.whishList.items.length %></div>
+
+                <% } else { %>
+                <div class="qty">0</div>
+               
+                <% } %>
+              </a>
+              <div class="cart-dropdown">
+                <div class="cart-list">
+                  <% if(isAuthenticated) { %> <%
+                  user.whishList.items.forEach(function(arrayItem) { %>
+                  <div class="product-widget">
+                    <!-- <div class="product-img">
+                      <img src="./img/product01.png" alt="" />
+                    </div> -->
+
+                    <div class="product-body">
+                      <h3 class="product-name">
+                        <a href="#"><%= arrayItem.productName %></a>
+                      </h3>
+                      <h4 class="product-price">
+                        <span class="qty"></span><%= arrayItem.price %>TK
+                      </h4>
+                    </div>
+                    <form action="/cart-wishlist-item" method="post">
+                      <input
+                        type="hidden"
+                        value="<%= arrayItem.productId._id %>"
+                        name="productId"
+                      />
+                      <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                      />
+                      <button class="delete">
+                        <i class="fa fa-close"></i>
+                      </button>
+                    </form>
+                  </div>
+                  <% }) %> 
+                  
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <!-- /Wishlist -->
+
+            <!-- Cart -->
+            <div class="dropdown">
+              <a
+                href="#"
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                aria-expanded="true"
+              >
+                <i class="fa fa-shopping-cart"></i>
+                <span>Your Cart</span>
+                <% if(isAuthenticated) { %>
+                <div class="qty"><%= user.cart.items.length %></div>
+
+                <% } else { %>
+                <div class="qty">0</div>
+                <% } %>
+              </a>
+              <div class="cart-dropdown">
+                <div class="cart-list">
+                  <% if(isAuthenticated) { %> <%
+                  user.cart.items.forEach(function(arrayItem) { %>
+                  <div class="product-widget">
+                    <!-- <div class="product-img">
+                      <img src="./img/product01.png" alt="" />
+                    </div> -->
+
+                    <div class="product-body">
+                      <h3 class="product-name">
+                        <a href="/products/<%= arrayItem.productId._id %>"
+                          ><%= arrayItem.productName %></a>
+                        
+                      </h3>
+                      <h4 class="product-price">
+                        <span class="qty"><%= arrayItem.quantity %>x</span><%=
+                        arrayItem.price %>TK
+                      </h4>
+                    </div>
+                    <form action="/cart-delete-item" method="post">
+                      <input
+                        type="hidden"
+                        value="<%= arrayItem.productId._id %>"
+                        name="productId"
+                      />
+                      <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                      />
+                      <button class="delete">
+                        <i class="fa fa-close"></i>
+                      </button>
+                    </form>
+                  </div>
+                  <% }) %> <% } %>
+                </div>
+                <div class="cart-summary">
+                  <% if(isAuthenticated) { %> <% let sum = 0 %> <%
+                  user.cart.items.forEach(function(items) { %> <% sum +=
+                  items.price; %> <% }) %>
+                  <small><%= user.cart.items.length %> Item(s) selected</small>
+
+                  <h5>TOTAL: <%= sum %>TK</h5>
+
+                  <% } else{ %>
+                  <small>NO Item(s) selected</small>
+                  <h5>TOTAL: 0</h5>
+                  <% } %>
+                </div>
+                <div class="cart-btns">
+                  <% if ( isAuthenticated && user.cart.items.length > 0 ) { %>
+                  <a href="/cart">View Cart</a>
+
+                  <a href="/checkout"
+                    >Checkout <i class="fa fa-arrow-circle-right"></i
+                  ></a>
+
+                  <% } else { %>
+
+                  <a href="#" class="disabled">Cart</a>
+
+                  <a href="/checkout" class="disabled"
+                    >Checkout <i class="fa fa-arrow-circle-right"></i
+                  ></a>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <!-- /Cart -->
+            <div class="menu-toggle">
+              <a href="#">
+                <i class="fa fa-bars"></i>
+                <span>Menu</span>
+              </a>
+            </div>
+            <!-- /Menu Toogle -->
+          </div>
+        </div>
+        <!-- /ACCOUNT -->
+      </div>
+      <!-- row -->
+    </div>
+    <!-- container -->
+  </div>
+  <!-- /MAIN HEADER -->
+</header>
+<!-- /HEADER -->

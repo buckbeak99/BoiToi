@@ -1,0 +1,522 @@
+<%- include('../includes/head.ejs') %>
+<style>
+	.pagination1 {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.pagination1 a {
+  text-decoration: none;
+  color: #00695c;
+  padding: 0.5rem;
+  border: 1px solid #00695c;
+  margin: 0 1rem;
+}
+
+.pagination1 a:hover,
+.pagination1 a:active
+ {
+  background: #00695c;
+  color: white;
+}
+.active1 {
+  background-color: #00695c;
+  color: white;
+}
+ sub {
+    pointer-events: none;
+    cursor: default;
+    background-color: #b2beb5;
+  }
+</style>
+	<body>
+		<!-- HEADER -->
+		
+			<%- include('../includes/header.ejs') %>
+		
+	
+
+		<!-- NAVIGATION -->
+		<%- include('../includes/navigation.ejs') %>
+		<!-- /NAVIGATION -->
+
+		<!-- BREADCRUMB -->
+		<div id="breadcrumb" class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- <div class="col-md-12">
+						<ul class="breadcrumb-tree">
+							<li><a href="#">Home</a></li>
+							<li><a href="#">All Categories</a></li>
+							<li><a href="#">Accessories</a></li>
+							<li><a href="#">Headphones</a></li>
+							<li class="active">Product name goes here</li>
+						</ul>
+					</div> -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /BREADCRUMB -->
+
+		<!-- SECTION -->
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- Product main img -->
+					<div class="col-md-5 col-md-push-2">
+						<div id="product-main-img">
+							<div class="product-preview">
+								<!-- <img src="./img/product01.png" alt=""> -->
+								<img src="/<%= prod.imageUrl %>" >
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product03.png" alt="">
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product06.png" alt="">
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product08.png" alt="">
+							</div>
+						</div>
+					</div>
+					<!-- /Product main img -->
+
+					<!-- Product thumb imgs -->
+					<div class="col-md-2  col-md-pull-5" style="visibility: hidden;">
+						<div id="product-imgs">
+							<div class="product-preview">
+								<img src="../img/product01.png" alt="">
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product03.png" alt="">
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product06.png" alt="">
+							</div>
+
+							<div class="product-preview">
+								<img src="../img/product08.png" alt="">
+							</div>
+						</div>
+					</div>
+					<!-- /Product thumb imgs -->
+
+					<!-- Product details -->
+					<div class="col-md-5">
+						<div class="product-details">
+							<h2 class="product-name"><%= prod.name %></h2>
+							<div>
+								<% avgRating = prod.ratingSum > 0 ?(prod.ratingSum/prod.reviews.length) : 0 %>
+								<% intAvgRating = Math.floor(avgRating) %>
+								<div class="product-rating">
+								<% const noStar1 = 5 - intAvgRating %>
+									<% for(x=0;x < intAvgRating;x++) { %>
+										<i class="fa fa-star"></i>
+									        <% } %>
+												<% if(noStar1 > 0) { %>
+													<% for(x=0;x < noStar1;x++) { %>
+														<i class="fa fa-star-o empty"></i>
+													<% } %>
+												<% } %>
+									
+								</div>
+								<input type="button" value='<%= prod.reviews.length %> Reviews | ADD Your Reviews' onClick="document.getElementById('review1').scrollIntoView();"></input>
+							</div>
+							<div>
+								<h3 class="product-price"><%= prod.price %>TK <del class="product-old-price"></del></h3>
+								<% if(prod.copy > 0) { %>
+								<span class="product-available">In Stock (Only <%= prod.copy %> copy remains)</span>
+								<% } else { %>
+									<span class="product-available">Out of Stock</span>
+								<% } %>
+							</div>
+							<!-- <p><%= prod.description%></p> -->
+							<% if(isAuthenticated) { %>
+								<% if( prod.userId.toString() === user._id.toString() ) { %>
+									<a href="/admin/add-discount/<%= prod._id %>">Add Discount</a>
+								<% } else if(user.userType === "ADMIN") { %>
+									<a href="/admin/add-discount/<%= prod._id %>">Add Discount</a>
+								<% } %>	
+							<% } %>
+
+							<div class="product-options">
+								
+								
+							</div>
+
+							<div class="add-to-cart">
+								<form action="/add-cart-with-quantity" method="post">
+									<input
+									type="hidden"
+									value="<%= prod._id %>"
+									name="productId"
+								  />
+								  <input
+									type="hidden"
+									name="_csrf"
+									value="<%= csrfToken %>"
+								  />
+								<div class="qty-label">
+									Qty
+									<div class="input-number">
+										<input type="number" name="quantity">
+										<span class="qty-up">+</span>
+										<span class="qty-down">-</span>
+									</div>
+								</div>
+								<button class="add-to-cart-btn" type="submit"><i class="fa fa-shopping-cart"></i> add to cart</button>
+							</form>
+							</div>
+
+							<ul class="product-btns">
+								<input type="hidden" value="<%= prod._id %>" name="productId">
+								<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+								
+								<li><% let found = false %>	
+									<%  if(isAuthenticated) {  %>
+
+									<% user.whishList.items.forEach(function(item) { %> 
+
+										<% if( item.productId.toString() === prod._id.toString() ) {  %>
+									
+											<% found = true %>
+									<%	}  %>
+
+								<%	})  %>
+
+										<% if (found) { %>
+											<%- include('../includes/remove-from-wishlist.ejs',{product: prod}) %>
+
+											<% } else { %>
+												<%- include('../includes/add-to-wishlist.ejs',{product: prod}) %>
+									<% } %>
+									<% } else { %>
+										<%- include('../includes/add-to-wishlist.ejs',{product: prod}) %>
+										<div style="visibility: hidden;">
+											<% found = false %>
+											<% if (found) { %>
+												<%- include('../includes/remove-from-wishlist.ejs',{product: prod}) %>
+	
+												<% } else { %>
+													<%- include('../includes/add-to-wishlist.ejs',{product: prod}) %>
+										<% } %>
+										</div>
+									<% } %>	</li>
+																	
+								
+							</ul>
+
+							<ul class="product-links">
+								<li>Category:</li>
+								<li style="font-weight: bolder;"><%= prod.category %></li>
+								
+							</ul>
+
+							<ul class="product-links">
+								<li>Share:</li>
+								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+								<li><a href="#"><i class="fa fa-envelope"></i></a></li>
+							</ul>
+
+						</div>
+					</div>
+					<!-- /Product details -->
+
+					<!-- Product tab -->
+					<div class="col-md-12">
+						<div id="product-tab">
+							<!-- product tab nav -->
+							<ul class="tab-nav">
+								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+								<!-- <li><a data-toggle="tab" href="#tab2">Details</a></li> -->
+								<!-- <li><a data-toggle="tab" href="#tab3">Reviews (<%= prod.reviews.length %>)</a></li> -->
+							</ul>
+							<!-- /product tab nav -->
+
+							<!-- product tab content -->
+							<div class="tab-content">
+								<!-- tab1  -->
+								<div id="tab1" class="tab-pane fade in active">
+									<div class="row">
+										<div class="col-md-12">
+											<p><%= prod.description %></p>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<!-- /product tab content  -->
+						</div>
+					</div>
+					<!-- /product tab -->
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /SECTION -->
+
+		<!-- Section -->
+		
+		<div class="col-md-12">
+			<div id="product-tab">
+				<!-- product tab nav -->
+				<ul class="tab-nav">
+					<li class="active"><a data-toggle="tab" href="#tab1">Reviews(<%= prod.reviews.length %>)</a></li>
+					<!-- <li><a data-toggle="tab" href="#tab2">Details</a></li> -->
+					<!-- <li><a data-toggle="tab" href="#tab3">Reviews (<%= prod.reviews.length %>)</a></li> -->
+				</ul>
+				<!-- /product tab nav -->
+
+				<!-- product tab content -->
+				<div class="tab-content" style="visibility: hidden;">
+					<!-- tab1  -->
+					<div id="tab1" class="tab-pane fade in active">
+						<div class="row">
+							<div class="col-md-12">
+								<p><%= prod.description %></p>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<!-- /product tab content  -->
+			</div>
+		</div>
+		
+		<div class="section" id="review1">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<div id="rating">
+							<div class="rating-avg">
+								
+								 <% avgRating = prod.ratingSum > 0 ?(prod.ratingSum/prod.reviews.length) : 0 %>
+								<% intAvgRating = Math.floor(avgRating) %>
+								<span><%= intAvgRating %></span>
+								<div class="rating-stars"> 
+									<% const noStar = 5 - intAvgRating %>
+									<% for(x=0;x < intAvgRating;x++) { %>
+										<i class="fa fa-star"></i>
+									        <% } %>
+												<% if(noStar > 0) { %>
+													<% for(x=0;x < noStar;x++) { %>
+														<i class="fa fa-star-o empty"></i>
+													<% } %>
+												<% } %>
+												
+								</div>
+							</div>
+							<ul class="rating">
+								<li>
+									<div class="rating-stars">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+									</div>
+									<div class="rating-progress">
+										<% wid = 100 %>
+										<div style="width: calc(100%)"></div>
+									</div>
+									<span class="sum"><%= prod.rating_five %></span>
+								</li>
+								<li>
+									<div class="rating-stars">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star-o"></i>
+									</div>
+									<div class="rating-progress">
+										<% wid = 60 %>
+										<div style = "width: wid "></div>
+									</div>
+									<span class="sum"><%= prod.rating_four %></span>
+								</li>
+								<li>
+									<div class="rating-stars">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+									</div>
+									<div class="rating-progress">
+										<div></div>
+									</div>
+									<span class="sum"><%= prod.rating_three %></span>
+								</li>
+								<li>
+									<div class="rating-stars">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+									</div>
+									<div class="rating-progress">
+										<div></div>
+									</div>
+									<span class="sum"><%= prod.rating_two %></span>
+								</li>
+								<li>
+									<div class="rating-stars">
+										<i class="fa fa-star"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+										<i class="fa fa-star-o"></i>
+									</div>
+									<div class="rating-progress">
+										<div></div>
+									</div>
+									<span class="sum"><%= prod.rating_one %></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!-- Reviews -->
+					<div class="col-md-6">
+						<div id="reviews">
+							<ul class="reviews">
+							<% if(prodReview.length > 0 ) { %>
+									<%  for(let prodItem of prodReview) { %>
+										<li>
+											<div class="review-heading">
+												<h5 class="name"><%=prodItem.name%></h5>
+												<p class="date"><%= prodItem.uploadTime%></p>
+												<div class="review-rating">
+													<% const noStar = 5 - prodItem.rating %>
+													<% for(x=0;x < prodItem.rating;x++) { %>
+														<i class="fa fa-star"aria-hidden="true"></i>
+														<% } %>
+														<% if(noStar > 0) { %>
+															<% for(x=0;x < noStar;x++) { %>
+																<i class="fa fa-star-o empty"></i>
+																<% } %>
+																<% } %>
+																
+
+																</div>
+															</div>
+															<div class="review-body">
+																<p style=" border: 1px solid;
+											padding: 10px;
+											box-shadow: 5px 10px 18px rgb(17, 68, 122);
+											outline: none;"><%= prodItem.review %></p>
+										</div>
+									</li>
+									<%	} %>
+									
+									
+									
+									<%	} else { %>
+										<p style="font-weight: bold; font-size: large;">No Reviews So Far!!</p>
+										<%	} %>
+										
+									</ul>
+									<ul class="pagination1">
+										<% loadurl = url %>
+									  <% if (currentPage !== 1 && previousPage !== 1) { %>
+									  <a href="?page=1">1</a>
+									  <% } %> 
+									  <% if (hasPreviousPage) { %>
+									  <a href="?page=<%= previousPage %>"><%= previousPage %></a>
+									  <% } %>
+									  <a href="?page=<%= currentPage %>" class="btn1 active1"><%= currentPage %></a>
+									  <% if (hasNextPage) { %>
+									  <a href="?page=<%= nextPage %>"><%= nextPage %></a>
+									  <% } %> 
+									  <% if (lastPage !== currentPage && nextPage !== lastPage && lastPage != 0) { %>
+									  <a href="?page=<%= lastPage %>"><%= lastPage %></a>
+									  <% } %>
+									</ul>
+																
+						</div>
+					</div>
+					<!-- /Reviews -->
+					<!-- Review Form -->
+					<% if(isAuthenticated) { %>
+						<div class="col-md-3">
+							<div id="review-form">
+								<form class="review-form" method="POST" action="/review-product" >
+									
+									<input class="input" type="text" name='name' value="<% if(isAuthenticated){ %> <%= user.name %> <% }%> " readonly>
+									<input class="input" type="email" name="email" value="<% if(isAuthenticated){ %> <%= user.email %> <% }%> " readonly>
+									
+									<textarea class="input" name="product_review" placeholder="Your Review"></textarea>
+									<div class="input-rating">
+										<span>Your Rating: </span>
+										<div class="stars">
+											<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+											<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+											<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+											<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+											<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+										</div>
+									</div>
+									<input type="hidden" value="<%= prod._id %>" name="productId"/>
+									<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+									<button type="submit" class="primary-btn">Submit</button>
+								</form>
+							</div>
+							
+						</div>
+						<% } else { %>
+							<div class="col-md-3">
+								<div id="review-form">
+									<form class="review-form">
+										<input class="input" type="text" placeholder="Your Name">
+										<input class="input" type="email" placeholder="Your Email">
+										<textarea class="input" placeholder="Log In to Write a Review"></textarea>
+										<div class="input-rating">
+											<span>Your Rating: </span>
+											<div class="stars">
+												<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+												<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+												<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+												<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+												<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+											</div>
+										</div>
+										<button class="primary-btn disable" style="background-color: #b2beb5;" disabled>Submit</button>
+									</form>
+								</div>
+							</div>
+							<% } %>
+						<!-- /Review Form -->
+				</div>
+			</div>
+			
+
+		</div>
+		
+		
+		<!-- /Section -->
+
+		<!-- jQuery Plugins -->
+		<%- include('../includes/end.ejs') %>
+		<script>
+			var elem = document.getElementById('four');		
+			elem.style.width = prod.rating_four + "%";
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,168 @@
+<%- include('../includes/head.ejs') %>
+
+
+  <%- include('../includes/header.ejs') %>
+
+
+
+</header>
+
+<%- include('../includes/navigation.ejs') %>
+
+<!DOCTYPE html>
+<html>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for all buttons */
+button1 {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 10px 20px;
+  background-color: #f44336;
+}
+.signupbtn {
+  padding: 10px 20px;
+  background-color: violet;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn {
+  float: left;
+  width: 10%;
+}
+
+/* Add padding to container elements */
+.container {
+  padding: 16px;
+}
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+.user-message {
+  margin: auto;
+  width: 90%;
+  border: 3px solid red;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background: #b9c9ff;
+  text-align: center;
+  color: white;
+  
+
+}
+.user-message--error {
+  border-color: red;
+  background: rgb(255, 176, 176);
+  color: white;
+}
+
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .signupbtn {
+     width: 100%;
+  }
+  .user-message {
+    width: 30rem;
+  }
+}
+</style>
+<body>
+  <main>
+    <% if (errorMessage) { %>
+      <div class="user-message user-message--error"><%= errorMessage %></div>
+  <% } %>
+  
+  </main>
+<div class="card-body" style="padding: 80px 90px;">
+  
+<form action="/signup" style="border:1px solid #ccc" class="card-body" method="POST" novalidate>
+  <div class="container ">
+    <p><h3>Are you a publisher? <a href="/publisher/signup" style="color:dodgerblue">Sign Up Here!!</a></h3></p>
+    <hr>
+    <label for="name"><b>Name</b>
+    <input type="text" placeholder="Enter name" name="name" style="border:1px solid #ccc" required>
+
+    <label for="email"><b>Email</b></label>
+    <input class="<%= validationErrors.find(e=> e.param === 'email') ? 'invalid' : ''  %>" type="text" placeholder="Enter Email" name="email" value="<%= oldInput.email %>" >
+
+    <label for="mobile"><b>Mobile No.</b></label>
+    <input type="text" placeholder="Mobile NO " name="mobile" required>
+
+    <label for="password"><b>Password</b></label>
+    <input class="<%= validationErrors.find(e=> e.param === "password") ? "invalid" : ""  %>" type="password" placeholder="Enter Password"  name="password" >
+   
+
+    <label for="confirmPassword"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Confirm Password" name="confirmPassword">
+
+    <label>
+      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+    </label>
+    <input type="hidden" name="userType" value="USER"/>
+   
+    
+    <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+    <div class="clearfix">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="button" class="cancelbtn button1">Cancel</button>
+      <button type="submit"class="signupbtn button1">Sign Up</button>
+      
+    </div>
+      
+    <p><h4>Already a Member!! <a href="/login" style="color:dodgerblue">Sign In</a>.</h4></p>
+  </div>
+</form>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<%- include('../includes/end.ejs') %>

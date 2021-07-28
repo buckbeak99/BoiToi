@@ -1,0 +1,218 @@
+<%- include('../includes/head.ejs') %>
+<style>
+  	.pagination1 {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.pagination1 a {
+  text-decoration: none;
+  color: #00695c;
+  padding: 0.5rem;
+  border: 1px solid #00695c;
+  margin: 0 1rem;
+}
+
+.pagination1 a:hover,
+.pagination1 a:active
+ {
+  background: #00695c;
+  color: white;
+}
+</style>
+    <!-- HEADER -->    
+    <%- include('../includes/header.ejs') %>
+    <!-- /HEADER -->
+
+    <!-- NAVIGATION -->
+    <%- include('../includes/navigation.ejs') %>
+
+    <!-- /NAVIGATION -->
+
+    <!-- SECTION -->
+    <div class="section">
+      <!-- container -->
+      <div class="container">
+        <!-- row -->
+        <div class="row">
+          <!-- ASIDE -->
+          <div id="aside" class="col-md-3">
+            <!-- aside Widget -->
+            <div class="aside">
+              <h3 class="aside-title">Categories</h3>
+              <% loadurl = url %>
+              <form method="GET" action="/get-p">
+                <div class="checkbox-filter">  
+                  <div class="input-checkbox">
+                    <input type="checkbox" id="category-3" name="camera" />
+                    <label for="category-3">
+                      <span></span>
+                      BCS
+                      
+                    </label>
+                  </div>
+  
+                  <div class="input-checkbox">
+                    <input type="checkbox" id="category-4" name="acc"/>
+                    <label for="category-4">
+                      <span></span>
+                      ADMISSION
+                      
+                    </label>
+                  </div>
+  
+                 
+                </div>
+                <button type="submit">Submit</button>
+              </form>
+              
+            </div>
+            <!-- /aside Widget -->
+
+            <!-- aside Widget -->
+            <div class="aside">
+              <h3 class="aside-title">Price</h3>
+              <div class="price-filter">
+                <div id="price-slider"></div>
+                <div class="input-number price-min">
+                  <input id="price-min" type="number" />
+                  <span class="qty-up">+</span>
+                  <span class="qty-down">-</span>
+                </div>
+                <span>-</span>
+                <div class="input-number price-max">
+                  <input id="price-max" type="number" />
+                  <span class="qty-up">+</span>
+                  <span class="qty-down">-</span>
+                </div>
+              </div>
+            </div>
+            <!-- /aside Widget -->
+
+           
+
+           
+          </div>
+          <!-- /ASIDE -->
+
+          <!-- STORE -->
+          <div id="store" class="col-md-9">
+        
+
+            <!-- store products -->
+            <div class="row">
+              <!-- product -->
+              <% if(prods.length > 0) { %>
+                <% prods.forEach(prod=> { %>
+                  <div class="col-md-4 col-xs-6">
+                    <div class="product">
+                      <div class="product-img">
+                        <img src=<%= prod.imageUrl %> alt="" />
+                       
+                      </div>
+                      <div class="product-body">
+                        <p class="product-category"><%= prod.category %></p>
+                        <h3 class="product-name">
+                          <a href="#"><%= prod.name %></a>
+                        </h3>
+                        <h4 class="product-price">
+                          <%= prod.price %>TK <del class="product-old-price">$990.00</del>
+                        </h4>
+                        <% avgRating = prod.ratingSum > 0 ?(prod.ratingSum/prod.reviews.length) : 0 %>
+                        <% intAvgRating = Math.floor(avgRating) %>
+                        <div class="product-rating">
+                          <% const noStar1 = 5 - intAvgRating %>
+                    <% for(x=0;x < intAvgRating;x++) { %>
+                      <i class="fa fa-star"></i>
+                            <% } %>
+                          <% if(noStar1 > 0) { %>
+                            <% for(x=0;x < noStar1;x++) { %>
+                              <i class="fa fa-star-o empty"></i>
+                            <% } %>
+                          <% } %>
+                        </div>
+                        <div class="product-btns">
+                          <% let found = false %>	
+                          <%  if(isAuthenticated) {  %>
+
+                          <% user.whishList.items.forEach(function(item) { %> 
+
+                              <% if( item.productId.toString() === prod._id.toString() ) {  %>
+                          
+                                  <% found = true %>
+                          <%	}  %>
+
+                      <%	})  %>
+
+                              <% if (found) { %>
+                                  <%- include('../includes/remove-from-wishlist.ejs',{product: prod}) %>
+
+                                  <% } else { %>
+                                      <%- include('../includes/add-to-wishlist.ejs',{product: prod}) %>
+                          <% } %>
+                          <% } else { %>
+                              <%- include('../includes/add-to-wishlist.ejs',{product: prod}) %>
+                          <% } %>	
+
+                  
+                           
+                          <button class="quick-view" onclick="location.href ='/products/<%= prod._id %>'"><i class="fa fa-eye"></i><span class="tooltipp">view</span></button>
+                      </div>
+                      </div>
+                      <div class="add-to-cart">
+                        <button class="add-to-cart-btn">
+                          <i class="fa fa-shopping-cart"></i> add to cart
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix visible-sm visible-xs"></div>
+               <% }) %>
+                <% } else { %>
+                  <h1>Empty Search result!!</h1>
+                  <% } %>
+              
+              
+              <!-- /product -->
+
+        
+            </div>
+            <!-- /store products -->
+
+            <!-- store bottom filter -->
+            <div class="store-filter clearfix">
+              <span class="store-qty">Showing <%= prods.length %> products</span>
+              <ul class="pagination1">
+                <% loadurl = url %>
+                <% if (currentPage !== 1 && previousPage !== 1) { %>
+                <a href="<% url %>?page=1" class="btn1 active1">1</a>
+                <% } %> 
+                <% if (hasPreviousPage) { %>
+                <a href="<% url %>?page=<%= previousPage %>" class="btn1 active1"><%= previousPage %></a>
+                <% } %>
+                <a href="<% url %>?page=<%= currentPage %>" class="btn1 active1"><%= currentPage %></a>
+                <% if (hasNextPage) { %>
+                <a href="<% url %>?page=<%= nextPage %>" class="btn1 active1"><%= nextPage %></a>
+                <% } %> 
+                <% if (lastPage !== currentPage && nextPage !== lastPage && lastPage != 0) { %>
+                <a href="<% url %>?page=<%= lastPage %>" class="btn1 active1"><%= lastPage %></a>
+                <% } %>
+              </ul>
+            </div>
+            <!-- /store bottom filter -->
+          </div>
+          <!-- /STORE -->
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+   
+
+    <%- include('../includes/end.ejs') %>
+
+
+  </body>
+</html>

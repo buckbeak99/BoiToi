@@ -1,0 +1,108 @@
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title">Top Sold Products</h3>
+                    <div class="section-nav">
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- /section title -->
+            
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <!-- tab -->
+                        <div id="tab1" class="tab-pane active">
+                            <div class="products-slick" data-nav="#slick-nav-1">
+                                <!-- product -->
+                                <% if(topProd.length > 0) { %>
+                                    <% for( let product of topProd) { %>
+                                        <div class="product">
+                                            <div class="product-img">
+                                                <img src="/<%= product.imageUrl %>" >
+                                                <!-- <div class="product-label">
+                                                    <span class="sale">-30%</span>
+                                                    <span class="new">NEW</span>
+                                                </div> -->
+                                            </div>
+                                    
+                                                <div class="product-body">
+                                                    <p class="product-category"><%= product.category %></p>
+                                                    <h3 class="product-name"><a href="#"><%= product.name %></a></h3>
+                                                    <% if (product.haveDiscount) { %>
+                                                        <h4 class="product-price"><%= product.discountAmount %> TK<del class="product-old-price"> <%= product.price %> TK</del></h4>
+                                                        <% } else { %>
+                                                        <h4 class="product-price"><%= product.price %>TK<del class="product-old-price"></del></h4>
+                                                        <% } %>
+                                                    <% avgRating = product.ratingSum > 0 ?(product.ratingSum/product.reviews.length) : 0 %>
+                                                     <% intAvgRating = Math.floor(avgRating) %>
+                                                    <div class="product-rating">
+                                                        <% const noStar1 = 5 - intAvgRating %>
+                                                        <% for(x=0;x < intAvgRating;x++) { %>
+                                                            <i class="fa fa-star"></i>
+                                                                <% } %>
+                                                                    <% if(noStar1 > 0) { %>
+                                                                        <% for(x=0;x < noStar1;x++) { %>
+                                                                            <i class="fa fa-star-o empty"></i>
+                                                                        <% } %>
+                                                                    <% } %>
+                                                    </div>
+                                                    <div class="product-btns">
+                                                        <% let found = false %>	
+                                                        <%  if(isAuthenticated) {  %>
+
+                                                        <% user.whishList.items.forEach(function(item) { %> 
+
+                                                            <% if( item.productId.toString() === product._id.toString() ) {  %>
+                                                        
+                                                                <% found = true %>
+                                                        <%	}  %>
+
+                                                    <%	})  %>
+
+                                                            <% if (found) { %>
+                                                                <%- include('./remove-from-wishlist.ejs',{product: product}) %>
+
+                                                                <% } else { %>
+                                                                    <%- include('./add-to-wishlist.ejs',{product: product}) %>
+                                                        <% } %>
+                                                        <% } else { %>
+                                                            <%- include('./add-to-wishlist.ejs',{product: product}) %>
+                                                        <% } %>	
+
+                                                
+                                                         
+                                                        <button class="quick-view" onclick="location.href ='/products/<%= product._id %>'"><i class="fa fa-eye"></i><span class="tooltipp">view</span></button>
+                                                    </div>
+                                                </div>
+                                            <div class="add-to-cart">
+                                                <%- include('./add-to-cart.ejs',{product: product}) %>
+                                            </div>
+                                        </div>
+                                        <% } %>	
+                                <% } else { %>
+                                    <h1>No product found!</h1>
+                                    <% } %>
+                            
+                                <!-- /product -->										
+                            </div>
+                            <div id="slick-nav-1" class="products-slick-nav"></div>
+                        </div>
+                        <!-- /tab -->
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>

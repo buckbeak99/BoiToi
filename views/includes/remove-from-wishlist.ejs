@@ -1,0 +1,22 @@
+<style>
+    .slider1:hover:after {
+      content: "Added to Wishlist";
+    }
+  </style>
+  
+  <form
+    action="/remove-from-whishlist"
+    method="post"
+    style="display: inline-block;"
+  >
+    <input type="hidden" name="_csrf" value="<%= csrfToken  %>" />
+    <input type="hidden" name="productId" value="<%= product._id %>" />
+    <button
+      class=""
+      type="submit"
+      style="border: none; color: red;"
+    >
+      <i style="font-size: 14px;" class="fa fa-heart slider1"></i>
+    </button>
+  </form>
+  

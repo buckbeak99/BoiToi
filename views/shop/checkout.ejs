@@ -1,0 +1,239 @@
+<%- include('../includes/head.ejs') %>
+<style>
+     .box{
+        display: none;
+}
+</style>
+  <body>
+    <!-- HEADER -->
+	<%- include('../includes/header.ejs') %>
+    <!-- /HEADER -->
+
+    <%- include('../includes/navigation.ejs') %>
+
+    <!-- BREADCRUMB -->
+   
+    <!-- /BREADCRUMB -->
+
+    <!-- SECTION -->
+    <div class="section">
+      <!-- container -->
+      <div class="container">
+        <!-- row -->
+        
+        <div class="row">
+          <div class="col-md-3">
+            <!-- Billing Details -->
+            <div class="billing-details" hidden>
+              <div class="section-title">
+                <h3 class="title">Billing address</h3>
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="first-name"
+                  placeholder="First Name"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="last-name"
+                  placeholder="Last Name"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="address"
+                  placeholder="Address"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="country"
+                  placeholder="Country"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="text"
+                  name="zip-code"
+                  placeholder="ZIP Code"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  class="input"
+                  type="tel"
+                  name="tel"
+                  placeholder="Telephone"
+                />
+              </div>
+              <div class="form-group">
+                <div class="input-checkbox">
+                  <input type="checkbox" id="create-account" />
+                  <label for="create-account">
+                    <span></span>
+                    Create Account?
+                  </label>
+                  <div class="caption">
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                      sed do eiusmod tempor incididunt.
+                    </p>
+                    <input
+                      class="input"
+                      type="password"
+                      name="password"
+                      placeholder="Enter Your Password"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div> 
+
+          <!-- Order Details -->
+          <div class="col-md-6 order-details">
+            <div class="section-title text-center">
+              <h3 class="title">Your Order</h3>
+            </div>
+            <div class="order-summary">
+              <div class="order-col">
+                <div><strong>PRODUCT DETAILS</strong></div>
+                <div><strong>TOTAL</strong></div>
+              </div>
+              <div class="order-products" style="font-weight: bold;">
+				  <% product.forEach(prod=> {  %>
+                <div class="order-col">
+                  <div><%= prod.quantity  %>x <%= prod.productName  %></div>
+                  <div><%= prod.price  %>TK</div>
+				</div>
+			<% }) %>
+                 
+              </div>
+              <div class="order-col">
+                <div>Shiping</div>
+                <div><strong>FREE</strong></div>
+              </div>
+              <div class="order-col">
+                <div><strong>TOTAL</strong></div>
+                <div><strong class="order-total"><%= sum %>TK</strong></div>
+              </div>
+            </div>
+            <div class="payment-method">
+              <div class="input-radio">
+                <input type="radio" name="payment" id="payment-1" onclick="showMe('div1')"/>
+                <label for="payment-1">
+                  <span></span>
+                  Cash On Delivary
+                </label>
+                <div class="caption">
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </p>
+                </div>
+              </div>
+              <div class="input-radio">
+                <input type="radio" name="payment" id="payment-3" onclick="showMe('div2')" />
+                <label for="payment-3">
+                  <span></span>
+                  Stripe Payment  
+                </label>
+                <div class="caption">
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="input-checkbox">
+              <input type="checkbox" id="terms" />
+              <label for="terms">
+                <span></span>
+                I've read and accept the <a href="#">terms & conditions</a>
+              </label>
+            </div>
+            <div id="div1" style="display: none;">
+              <a href="/create-order" class="primary-btn order-submit">Place order</a>
+
+            </div>
+            <div id="div2" style="display: none;">
+              <!-- <a href="#" class="primary-btn order-submit">Stripe Order </a> -->
+              <form action="/create-order-stripe" method="POST" style="text-align: center;">
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="pk_test_51GqeYUAabT662b5quoUQRa8ZyUiZQH84gdyOIFRnK9bM3W60jBwPmUi5i3SpuCymjF0OfdwD7xQrvhifiwEYLSKC00nWVpuJcd"
+                  data-amount="<%= sum * 100 %>"
+                  data-name="Your Order"
+                  data-description="All the items you ordewred"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-locale="auto"
+                  data-currency="usd">
+                </script>
+              </form>
+           
+            </div>
+          </div>
+          <div class="col-md-3"></div>
+          <!-- /Order Details -->
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    <%- include('../includes/end.ejs') %>
+
+    <script>
+
+      function showMe(box){
+        document.getElementById('div1').style.display = 'none';
+        document.getElementById('div2').style.display = 'none';
+
+        var chboxs = document.getElementsByName("payment");
+        
+        // console.log(chboxs);
+        var vis = "none";
+        for(var i=0;i<chboxs.length;i++) { 
+            if(chboxs[i].checked){
+             vis = "block";
+                break;
+            }
+        }
+        document.getElementById(box).style.display = vis;
+
+      }
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,318 @@
+<%- include('../includes/head.ejs') %> <%- include('../includes/header.ejs') %>
+<%- include('../includes/navigation.ejs') %>
+
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  .image-preview {
+    width: 250px;
+    min-height: 250px;
+    border: 2px solid #dddddd;
+    margin-top: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #cccccc;
+  }
+
+  .image-preview__image {
+    display: none;
+    width: 100%;
+  }
+
+  .forms-control {
+    margin: 1rem 0;
+  }
+
+  .forms-control label,
+  .forms-control input,
+  .forms-control textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font: inherit;
+    border: 1px solid #00695c;
+    color: #00695c;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .product-form {
+    width: 100rem;
+    /* max-width: 100%; */
+    margin: auto;
+    display: block;
+  }
+  .products-form {
+    width: 90rem;
+    max-width: 100%;
+    margin: auto;
+    display: block;
+  }
+  .forms-control input,
+  .forms-control textarea {
+    border: 1px solid #a1a1a1;
+    font: inherit;
+    border-radius: 2px;
+  }
+
+  .forms-control input:focus,
+  .forms-control textarea:focus {
+    outline-color: #00695c;
+  }
+
+  .forms-control input.invalid {
+    border-color: red;
+  }
+  .user-message {
+    margin: auto;
+    width: 90%;
+    border: 1px solid #4771fa;
+    padding: 0.5rem;
+    border-radius: 3px;
+    background: #b9c9ff;
+    text-align: center;
+    color: white;
+  }
+
+  .user-message--error {
+    border-color: red;
+    background: rgb(255, 176, 176);
+    color: red;
+  }
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Publisher dashboard</h2>
+      <a href="/publisher/edit-profile"> <strong>Edit Profile</strong> </a>
+      <hr style="visibility: hidden;"/>
+      <table>
+        <tr>
+          <td>Publisher Title</td>
+          <td><%= user.name %></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td><%= user.email %></td>
+        </tr>
+        <tr>
+          <td>Phone Number</td>
+          <td><%= user.Mobile_No %></td>
+        </tr>
+        <tr>
+            <td>Publisher Description</td>
+            <td><%= user.description %></td>
+          </tr>
+      </table>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+      <div class="product-img">
+        <img src="/<%= user.imageUrl %>" width="250" height="250" />
+      </div>
+      
+    </div>
+  </div>
+  <hr/ style="visibility: hidden;">
+
+  <h2>Publishers Product Order Details</h2>
+  <% if (orders.length > 0) { %>
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Ordered Amount</th>
+            <th>Order Status</th>
+            <th>Payment Status</th>
+            <th>Invoice</th>
+            
+          </tr>
+          <%  for(let order of orders) { %>
+            <% if (order.products[0].product.userId.toString() === user._id.toString()) { %>
+            <tr>
+                <td> <%= order._id %></td>
+                <td><%= order.products.length %></td>
+                <td><%= order.orderStatus %></td>
+                <td><%= order.payment_status %></td>
+                <td><a href="/orders/<%= order._id %>">Invoice</a></td>
+              </tr>
+        <% } %>
+        <% } %>
+    
+      </table>
+    <% } else { %>
+        <h1>No Order Yet.</h1>
+    <% }  %>
+      
+
+  <hr style="visibility: hidden;"/>
+  <h1>Discount Products</h1>
+  <% for(i = 0;i< 5;i++) { %>
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+                <!-- section title -->
+                <div class="col-md-12">
+                    <div class="section-title">
+                        
+                        <h3 class="title"><%= categories[i].name %></h3>
+                        <div class="section-nav">
+                            
+                        </div>
+                    </div>
+                </div>
+                <!-- /section title -->
+
+                <!-- Products tab & slick -->
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="products-tabs">
+                            <!-- tab -->
+                            <div id="tab1" class="tab-pane active">
+                                <div class="products-slick" data-nav="#slick-nav-1">
+                                    <!-- product -->
+                                    <% if(prods.length > 0) { %>
+                                        <% for( let product of prods) { %>
+                                            <% if(product.category === categories[i].name && product.userId.toString() === user._id.toString() && product.haveDiscount ) { %>
+                                        <div class="product">
+                                            <div class="product-img">
+                                                <img src="/<%= product.imageUrl %>" >
+                                                <!-- <div class="product-label">
+                                                    <span class="sale">-30%</span>
+                                                    <span class="new">NEW</span>
+                                                </div> -->
+                                            </div>
+                                    
+                                                <div class="product-body">
+                                                    <p class="product-category"><%= product.category %></p>
+                                                    <h3 class="product-name"><a href="#"><%= product.name %></a></h3>
+                                                    <% if (product.haveDiscount) { %>
+                                                    <h4 class="product-price"><%= product.discountAmount %> TK<del class="product-old-price"> <%= product.price %> TK</del></h4>
+                                                    <% } else { %>
+                                                    <h4 class="product-price"><%= product.price %>TK<del class="product-old-price"></del></h4>
+                                                    <% } %>
+                                                    <% avgRating = product.ratingSum > 0 ?(product.ratingSum/product.reviews.length) : 0 %>
+                                                     <% intAvgRating = Math.floor(avgRating) %>
+                                                    <div class="product-rating">
+                                                        <% const noStar1 = 5 - intAvgRating %>
+                                                        <% for(x=0;x < intAvgRating;x++) { %>
+                                                            <i class="fa fa-star"></i>
+                                                                <% } %>
+                                                                    <% if(noStar1 > 0) { %>
+                                                                        <% for(x=0;x < noStar1;x++) { %>
+                                                                            <i class="fa fa-star-o empty"></i>
+                                                                        <% } %>
+                                                                    <% } %>
+                                                    </div>
+                                                    <div class="product-btns">
+                                                        <% let found = false %>	
+                                                        <%  if(isAuthenticated) {  %>
+
+                                                        <% user.whishList.items.forEach(function(item) { %> 
+
+                                                            <% if( item.productId.toString() === product._id.toString() ) {  %>
+                                                        
+                                                                <% found = true %>
+                                                        <%	}  %>
+
+                                                    <%	})  %>
+
+                                                            <% if (found) { %>
+                                                                <%- include('../includes/remove-from-wishlist.ejs',{product: product}) %>
+
+                                                                <% } else { %>
+                                                                    <%- include('../includes/add-to-wishlist.ejs',{product: product}) %>
+                                                        <% } %>
+                                                        <% } else { %>
+                                                            <%- include('../includes/add-to-wishlist.ejs',{product: product}) %>
+                                                        <% } %>	
+
+                                                
+                                                         
+                                                        <button class="quick-view" onclick="location.href ='/products/<%= product._id %>'"><i class="fa fa-eye"></i><span class="tooltipp">view</span></button>
+                                                    </div>
+                                                </div>
+                                            <div class="add-to-cart">
+                                                <%- include('../includes/add-to-cart.ejs',{product: product}) %>
+                                            </div>
+                                        </div>
+                                        <% } %>	
+                                        <% } %>
+                                    <% } else { %>
+                                        <h1>No product found!</h1>
+                                        <% } %>
+                                    
+                                    <!-- /product -->										
+                                </div>
+                                <div id="slick-nav-1" class="products-slick-nav"></div>
+                            </div>
+                            <!-- /tab -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Products tab & slick -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+<% } %>
+</div>
+
+<script>
+  const inpFile = document.getElementById("Myimage");
+  const previewContainer = document.getElementById("imagePreview");
+  const previewImage = previewContainer.querySelector(".image-preview__image");
+  const previewDefaultText = previewContainer.querySelector(
+    ".image-preview__default-text"
+  );
+
+  inpFile.addEventListener("change", function () {
+    const file = this.files[0];
+    // console.log(file);
+    if (file) {
+      const reader = new FileReader();
+
+      previewDefaultText.style.display = "none";
+      previewImage.style.display = "block";
+
+      reader.addEventListener("load", function () {
+        previewImage.setAttribute("src", this.result);
+      });
+
+      reader.readAsDataURL(file);
+    } else {
+      previewDefaultText.style.display = null;
+      previewImage.style.display = null;
+      previewImage.setAttribute("src", "");
+    }
+  });
+</script>
+
+<%- include('../includes/end.ejs') %>

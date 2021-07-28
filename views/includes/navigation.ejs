@@ -1,0 +1,79 @@
+<!-- NAVIGATION -->
+<style>
+  .active1 {
+    
+    color: red;
+    
+  }
+</style>
+<nav id="navigation">
+  <!-- container -->
+  <div class="container">
+    <!-- responsive-nav -->
+    <div id="responsive-nav">
+      <!-- NAV -->
+      <ul class="main-nav nav navbar-nav">
+        <li>
+          <a class="<%= path === '/' ? 'active1' : '' %>" href="/">Home</a>
+        </li>
+
+        <li>
+          <a class="<%= path === '/categories' ? 'active1' : '' %>" href="/categories"
+            >Categories</a
+          >
+        </li>
+        <li>
+          <a class="<%= path === '/cart' ? 'active1' : '' %>" href="/cart"
+            >Cart</a
+          >
+        </li>
+        <li>
+          <a class="<%= path === '/orders' ? 'active1' : '' %>" href="/orders"
+            >Orders</a
+          >
+        </li>
+        <% if (isAuthenticated) { %> <% if(user.userType === 'PUBLISHER' ||
+        user.userType === 'ADMIN') { %>
+        <li>
+          <a
+            class="<%= path === '/admin/add-category' ? 'active1' : '' %>"
+            href="/admin/add-category"
+            >Add Category</a
+          >
+        </li>
+        <li>
+          <a
+            class="<%= path === '/admin/add-product' ? 'active1' : '' %>"
+            href="/admin/add-product"
+            >Add Product</a
+          >
+        </li>
+        <% if(user.userType === 'PUBLISHER') { %>
+        <li>
+          <a
+            class="<%= path === '/admin/products' ? 'active1' : '' %>"
+            href="/admin/products"
+            >Publisher Products</a
+          >
+        </li>
+       
+        <% } else if(user.userType === 'ADMIN') { %>
+        <li>
+          <a
+            class="<%= path === '/admin/publisher-list' ? 'active1' : '' %>"
+            href="/admin/publisher-list"
+            >Publishers List</a
+          >
+        </li>
+       
+        <% } %>
+        <!-- <li><a href="/admin/products">Add Vouchers</a></li>        -->
+        <% } %> <% } %>
+      </ul>
+      <!-- /NAV -->
+    </div>
+    <!-- /responsive-nav -->
+  </div>
+  <!-- /container -->
+</nav>
+<!-- /NAVIGATION -->
