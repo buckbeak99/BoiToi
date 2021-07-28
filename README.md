@@ -43,3 +43,8 @@ Publishers are another type of user that add their books and keep track of their
 - run `npm install`
 - run `npm start` to run the project
 - search in the brower using `localhost:3001`
+
+## Screenshots
+![home](https://user-images.githubusercontent.com/43216053/127352642-09d44951-35e8-49f6-afa5-d1dad851661e.png)
+![Top_reviewed_products](https://user-images.githubusercontent.com/43216053/127352657-b0b364a4-a678-4cb8-9fc1-9a78c4ebd00a.png)
+![Top_Sold_Products](https://user-images.githubusercontent.com/43216053/127352670-c7ec4496-4283-4909-acb7-316cc4b45aa0.png)
